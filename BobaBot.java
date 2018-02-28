@@ -1,12 +1,10 @@
 package sming_jmsato;
 
 import robocode.*;
-//import java.awt.Color;
-
-// API help : http://robocode.sourceforge.net/docs/robocode/robocode/Robot.html
+import java.awt.Color;
 
 /**
- * BobaBot - a robot by (your name here)
+ * BobaBot - an AdvancedRobot by Serena Ing and Jordyn Sato
  */
 public class BobaBot extends AdvancedRobot
 {
@@ -19,7 +17,7 @@ public class BobaBot extends AdvancedRobot
 		// After trying out your robot, try uncommenting the import at the top,
 		// and the next line:
 
-		// setColors(Color.red,Color.blue,Color.green); // body,gun,radar
+		setColors(Color.red,Color.blue,Color.green); // body,gun,radar
 
 		// Robot main loop
 		while(true) {
@@ -28,6 +26,7 @@ public class BobaBot extends AdvancedRobot
 			turnGunRight(360);
 			back(100);
 			turnGunRight(360);
+			scan();
 		}
 	}
 
@@ -36,7 +35,14 @@ public class BobaBot extends AdvancedRobot
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
 		// Replace the next line with any behavior you would like
+		double x = this.getX();
+		double y = this.getY();
+		
+		Targeting t = new Targeting(x, y, e.getDistance(), e.getHeading(), e.getVelocity());
+		t.calculate();		
+
 		fire(1);
+		
 	}
 
 	/**
