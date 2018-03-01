@@ -38,9 +38,10 @@ public class BobaBot extends AdvancedRobot
 		double x = this.getX();
 		double y = this.getY();
 		
-		Targeting t = new Targeting(x, y, e.getDistance(), e.getHeading(), e.getVelocity());
-		t.calculate();		
-
+		Targeting t = new Targeting(x, y, e.getDistance(), e.getBearingRadians(), e.getHeadingRadians(), e.getVelocity());
+		t.calculateLinear();
+		
+		turnGunRight(t.getFireHeading());
 		fire(1);
 		
 	}
@@ -50,7 +51,7 @@ public class BobaBot extends AdvancedRobot
 	 */
 	public void onHitByBullet(HitByBulletEvent e) {
 		// Replace the next line with any behavior you would like
-		back(10);
+		//back(10);
 	}
 	
 	/**
