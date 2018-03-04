@@ -9,6 +9,11 @@ import robocode.util.Utils;
  */
 public class BobaBot extends AdvancedRobot
 {
+	private double maxWidth, maxHeight;
+	private double currentX, currentY, distance;
+	private int wallPadding = 50;
+	boolean ifRobotThere; //if there is a robot there
+	
 	/**
 	 * run: BobaBot's default behavior
 	 */
@@ -24,14 +29,25 @@ public class BobaBot extends AdvancedRobot
 		setAdjustRadarForRobotTurn(true);
 		
 		// Robot main loop
-		while(true) {
-			turnLeft(Math.cos(getX()));
+		distance = Math.max(getBattleFieldWidth(), getBattleFieldHeight());
+			ifRobotThere=false;
+			turnLeft(getHeading() %90); // moving towards a wall
+			ahead(distance);
+			ifRobotThere=true;
+			
+		
+		while(true) {		
+			ifRobotThere = true;
+			ahead(distance);
+			ifRobotThere=false;
+			turnRight(90);
+			ahead(100);
 			turnGunRight(360);
-			//ahead(100);
-			scan();
-			//back(100);
-			scan();
-		}
+			back(100);
+			turnGunRight(360);
+			
+			
+		}//end while
 	}
 
 	/**
@@ -48,6 +64,9 @@ public class BobaBot extends AdvancedRobot
 		turnGunRight(turnAngle);
 		
 		setFire(2);
+		
+		if(ifRobotThere)
+			scan();
 	}
 
 	/**
