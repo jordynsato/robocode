@@ -9,11 +9,10 @@ import robocode.util.Utils;
  */
 public class BobaBot extends AdvancedRobot
 {
-	private double maxWidth, maxHeight;
-	private double currentX, currentY, distance;
-	private int wallPadding = 50;
-	boolean ifRobotThere; //if there is a robot there
-	
+	private double distanceX, distanceY, direction;
+	private boolean ifRobotThere; //if there is a robot there
+	private int count;
+
 	/**
 	 * run: BobaBot's default behavior
 	 */
@@ -22,32 +21,31 @@ public class BobaBot extends AdvancedRobot
 
 		// After trying out your robot, try uncommenting the import at the top,
 		// and the next line:
-		currentX = getX();
-		currentY = getY();
 		setColors(Color.red,Color.blue,Color.green); // body,gun,radar
 		setBulletColor(Color.red);
-		setAdjustGunForRobotTurn(true);
-		setAdjustRadarForRobotTurn(true);
-		
+
+		count = 0;
+		distanceX = getBattleFieldWidth() - 50;
+		distanceY = getBattleFieldHeight() - 50;
+		ifRobotThere=false;
+		turnLeft(getHeading() %90); // moving towards a wall
+		ahead(distanceX);
+		ifRobotThere=true;
+		turnGunRight(90);
+				
 		// Robot main loop
-		distance = Math.max(getBattleFieldWidth(), getBattleFieldHeight());
-			ifRobotThere=false;
-			turnLeft(getHeading() %90); // moving towards a wall
-			ahead(distance);
-			ifRobotThere=true;
-			
-		
-		while(true) {		
+		while(true) {
 			ifRobotThere = true;
-			ahead(distance);
-			ifRobotThere=false;
-			turnRight(90);
-			ahead(100);
-			turnGunRight(360);
-			back(100);
-			turnGunRight(360);
+			direction = getHeading();
 			
-			
+			if(count >= 2) {
+				avoidWalls(10);
+			}
+			else {
+				avoidWalls(0);
+			}
+			ifRobotThere = false;
+			count++;
 		}//end while
 	}
 
@@ -70,21 +68,34 @@ public class BobaBot extends AdvancedRobot
 			scan();
 	}
 
-	/**
-	 * onHitByBullet: What to do when you're hit by a bullet
-	 */
-	public void onHitByBullet(HitByBulletEvent e) {
-		// Replace the next line with any behavior you would like
-		//back(10);
-		//turnGunRight(e.getHeading() - this.getGunHeading());
-		//fire(2);
+	public void onHitRobot(HitRobotEvent e) {
+		if(e.getBearing() > -90 && e.getBearing() < 90) {
+			back(100);
+		}
+		else {
+			ahead(100);
+		}
 	}
-	
-	/**
-	 * onHitWall: What to do when you hit a wall
-	 */
-	public void onHitWall(HitWallEvent e) {
-		// Replace the next line with any behavior you would like
-		//back(20);
+
+	private void avoidWalls(double buffer) {
+		if(getY() + distanceY >= distanceY || getX() + distanceX >= distanceX) {
+			turnRight(90);
+			if(direction == 180) {
+				ahead(distanceX - 10);
+			}
+			else if(direction == 0) {
+				ahead(distanceX - buffer);
+			}
+			else if(direction == 90) {
+				ahead(distanceY - buffer);
+			}
+			else {
+				ahead(distanceY - 10);
+			}
+		}
+		else {
+			turnRight(90);
+			ahead(distanceX);
+		}
 	}
 }
