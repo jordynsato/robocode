@@ -2,6 +2,7 @@ package sming_jmsato;
 
 import robocode.*;
 import java.awt.Color;
+import robocode.util.Utils;
 
 /**
  * BobaBot - an AdvancedRobot by Serena Ing and Jordyn Sato
@@ -18,7 +19,7 @@ public class BobaBot extends AdvancedRobot
 		// and the next line:
 
 		setColors(Color.red,Color.blue,Color.green); // body,gun,radar
-
+		setBulletColor(Color.red);
 		setAdjustGunForRobotTurn(true);
 		setAdjustRadarForRobotTurn(true);
 		
@@ -38,25 +39,14 @@ public class BobaBot extends AdvancedRobot
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
 		// Replace the next line with any behavior you would like
-		double x = this.getX();
-		double y = this.getY();
-		double rHeading = this.getHeadingRadians();
-		double rVelocity = this.getVelocity();
-		double tVelocity = e.getVelocity();
-		double eHeading = e.getHeadingRadians();		
-		double gunHeading = this.getGunHeadingRadians();
-		//double bulletPower = this.getBulletPower();
+		double rHeading = this.getHeading();
+		double tBearing = e.getBearing();		
+		double gunHeading = this.getGunHeading();
 		
-		if(tVelocity == 0) {
-			turnGunRight(eHeading - gunHeading);
-		}
-		else {	
-			Targeting t = new Targeting(x, y, rHeading, rVelocity, e.getDistance(), e.getBearingRadians(), eHeading, tVelocity);
-			t.calculateLinear();			
-			turnGunRight(t.getFireHeading() - gunHeading);
-			//turnGunRight(Utils.normalRelativeAngle(t.getFireHeading() - gunHeading));
-			//turnGunRightRadians(getRelativeAngle(t.getFireHeading() - gunHeading));
-		}
+		double turnAngle = Utils.normalRelativeAngleDegrees(rHeading + tBearing - gunHeading);
+
+		turnGunRight(turnAngle);
+		
 		setFire(2);
 	}
 
