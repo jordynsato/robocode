@@ -14,8 +14,9 @@ public class SerenasRobot extends AdvancedRobot
 	 * trying to create oscillating movement behavior
 	 */
 	private double maxWidth, maxHeight;
-	private double currentX, currentY;
+	private double currentX, currentY, distance;
 	private int wallPadding = 50;
+	boolean ifRobotThere; //if there is a robot there
 
 	public void run() {
 		// Initialization of the robot should be put here
@@ -23,28 +24,27 @@ public class SerenasRobot extends AdvancedRobot
 		// and the next line:
 		// setColors(Color.red,Color.blue,Color.green); // body,gun,radar
 		// Robot main loop
-		while(true) {
-			/*			
-			// Replace the next 4 lines with any behavior you would like
+		//gets a maximum distance robot should move based on the width and height of the battlefield
+			
+			distance = Math.max(getBattleFieldWidth(), getBattleFieldHeight());
+			ifRobotThere=false;
+			turnLeft(getHeading() %90); // moving towards a wall
+			ahead(distance);
+			ifRobotThere=true;
+			
+		
+		while(true) {		
+			ifRobotThere = true;
+			ahead(distance);
+			ifRobotThere=false;
+			turnRight(90);
 			ahead(100);
 			turnGunRight(360);
 			back(100);
 			turnGunRight(360);
-			*/
 			
-			addCustomEvent(new Condition ("avoidingWall") {
-				public boolean test(){
-					return (getX() <= wallPadding ||
-					getX() >= getBattleFieldWidth()-wallPadding ||
-					getY() <=wallPadding||
-					getY()>=getBattleFieldHeight() - wallPadding
-					);
-				}
-			});//end anonymous inner class
 			
-		
 		}//end while
-		//removeCustomEvent("avoidingWall");
 	}
 
 	/**
@@ -52,23 +52,21 @@ public class SerenasRobot extends AdvancedRobot
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
 		// Replace the next line with any behavior you would like
-		fire(1);
+		fire(1.5);
+		if(ifRobotThere)
+			scan();
 	}
 
 	/**
 	 * onHitByBullet: What to do when you're hit by a bullet
 	 */
-	public void onHitByBullet(HitByBulletEvent e) {
-		// Replace the next line with any behavior you would like
-		back(10);
-	}
-	
-	/**
-	 * onHitWall: What to do when you hit a wall
-	 */
-	public void onHitWall(HitWallEvent e) {
-		// Replace the next line with any behavior you would like
-		back(20);
+	public void onHitRobot(HitRobotEvent e){
+		if(e.getBearing() > -90 && e.getBearing() < 90){
+			back(100);
+		}
+		else{
+			ahead(100);
+		}
 	}	
 	
 	
