@@ -17,7 +17,7 @@ public class Targeting
 	//Where our robot should fire
 	private double fireHeading;
 	//How fast and far the bullet is
-	private double bulletDistance;
+	private double vBullet, bulletDistance;
 	
 	public Targeting(double x, double y, double rh, double rv, double d, double b, double h, double v) {
 		xr = x;
@@ -39,8 +39,7 @@ public class Targeting
 		pXC = xt + (velocity * Math.cos(heading) * time);
 		pYC = yt + (velocity * Math.sin(heading) * time);
 		bulletDistance = Math.hypot(pXC, pYC);
-		System.out.println(xt + " " + yt + " " + pXC + " " + pYC);
-		//vBullet = bulletDistance/time;
+		vBullet = bulletDistance/time;
 		fireHeading = Math.atan(pYC/pXC);
 	}
 	
@@ -52,12 +51,12 @@ public class Targeting
 		return bulletDistance;
 	}
 	
-//	public double getBulletVelocity() {
-	//	return vBullet;
-	//}
+	public double getBulletVelocity() {
+		return vBullet;
+	}
 	
 	private double f(double time) {
-		double vb = 20 - 3 * 3;
+		double vb = 17;
 		double dX = xt - xr;
 		double dY = yt - yr;
 		return Math.hypot(dX, dY) - vb * time;

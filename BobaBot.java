@@ -26,9 +26,9 @@ public class BobaBot extends AdvancedRobot
 		while(true) {
 			turnLeft(Math.cos(getX()));
 			turnGunRight(360);
-			ahead(100);
+			//ahead(100);
 			scan();
-			back(100);
+			//back(100);
 			scan();
 		}
 	}
@@ -42,15 +42,21 @@ public class BobaBot extends AdvancedRobot
 		double y = this.getY();
 		double rHeading = this.getHeadingRadians();
 		double rVelocity = this.getVelocity();
+		double tVelocity = e.getVelocity();
 		double eHeading = e.getHeadingRadians();		
 		double gunHeading = this.getGunHeadingRadians();
 		//double bulletPower = this.getBulletPower();
-		Targeting t = new Targeting(x, y, rHeading, rVelocity, e.getDistance(), e.getBearingRadians(), eHeading, e.getVelocity());
-		t.calculateLinear();
 		
-		turnGunRight(t.getFireHeading() - gunHeading);
-		//turnGunRight(Utils.normalRelativeAngle(t.getFireHeading() - gunHeading));
-		//turnGunRightRadians(getRelativeAngle(t.getFireHeading() - gunHeading));
+		if(tVelocity == 0) {
+			turnGunRight(eHeading - gunHeading);
+		}
+		else {	
+			Targeting t = new Targeting(x, y, rHeading, rVelocity, e.getDistance(), e.getBearingRadians(), eHeading, tVelocity);
+			t.calculateLinear();			
+			turnGunRight(t.getFireHeading() - gunHeading);
+			//turnGunRight(Utils.normalRelativeAngle(t.getFireHeading() - gunHeading));
+			//turnGunRightRadians(getRelativeAngle(t.getFireHeading() - gunHeading));
+		}
 		setFire(2);
 	}
 
@@ -60,8 +66,8 @@ public class BobaBot extends AdvancedRobot
 	public void onHitByBullet(HitByBulletEvent e) {
 		// Replace the next line with any behavior you would like
 		//back(10);
-		//turnGunRightRadians(e.getHeadingRadians()- this.getGunHeadingRadians());
-		//fire(1);
+		//turnGunRight(e.getHeading() - this.getGunHeading());
+		//fire(2);
 	}
 	
 	/**
