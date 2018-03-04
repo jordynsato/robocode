@@ -22,7 +22,8 @@ public class BobaBot extends AdvancedRobot
 
 		// After trying out your robot, try uncommenting the import at the top,
 		// and the next line:
-
+		currentX = getX();
+		currentY = getY();
 		setColors(Color.red,Color.blue,Color.green); // body,gun,radar
 		setBulletColor(Color.red);
 		setAdjustGunForRobotTurn(true);
