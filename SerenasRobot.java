@@ -14,10 +14,11 @@ public class SerenasRobot extends AdvancedRobot
 	 * run: SerenasRobot's default behavior
 	 * trying to create oscillating movement behavior
 	 */
-	private double distanceX, distanceY;
-	private double direction; //getHeading() to find direction bot is facing
+	double distanceX, distanceY;
+	double direction; //getHeading() to find direction bot is facing
 	boolean ifRobotThere; //if there is a robot there
-
+	int count;
+	
 	public void run() {
 		// Initialization of the robot should be put here
 		// After trying out your robot, try uncommenting the import at the top,
@@ -25,39 +26,50 @@ public class SerenasRobot extends AdvancedRobot
 		setBulletColor(Color.red);
 		// Robot main loop
 		//gets a maximum distance robot should move based on the width and height of the battlefield
-			
-			distanceX = getBattleFieldWidth()-5;
-			distanceY = getBattleFieldWidth()-5;
+			count =0;
+			distanceX = getBattleFieldWidth()-50;
+			distanceY = getBattleFieldHeight()-50;
 			ifRobotThere=false;
-			turnLeft(getHeading() %90); // moving towards a wall
+			turnLeft(getHeading()%90); // moving towards a wall
 			ahead(distanceX);
 			ifRobotThere=true;
 			turnGunRight(90);
-			//turnRight(90);
-		
 		while(true) {		
 			ifRobotThere = true;
 			direction = getHeading();
-			if(getY()<=10||getY()>=getBattleFieldHeight()-10||
-				getX() <= 10 || getX() >= getBattleFieldWidth()-10){
+			
+			if(count >= 2) {
+				avoidWalls(10);
+			}
+			else {
+				avoidWalls(0);
+			}
+
+			/*if(getY()>=(getBattleFieldHeight()-50) || getX() >= getBattleFieldWidth()-50){
 					turnRight(90);
-					if(direction==0||direction==180){
-					ahead(distanceX);
+					if(direction==180){
+					ahead(distanceX - 10);
+					turnGunRight(360);
 					}
-					else{
+					else if(direction == 0) {
+					ahead(distanceX);
+					turnRadarRight(360);
+					}
+					else if(direction == 90){
 					ahead(distanceY);
 					}
+					else
+					ahead(distanceY-50);
 				}
 			else{
 			turnRight(90);	
 			ahead(distanceX);
-			}
-		
+			}*/
+			
+								
 			ifRobotThere=false;
-			//turnRight(90);
 			
-			
-			
+			count++;
 		}//end while
 	}
 
@@ -66,7 +78,7 @@ public class SerenasRobot extends AdvancedRobot
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
 		// Replace the next line with any behavior you would like
-		fire(1.5);
+		//fire(2);
 		if(ifRobotThere)
 			scan();
 	}
@@ -83,5 +95,27 @@ public class SerenasRobot extends AdvancedRobot
 		}
 	}	
 	
-	
+	private void avoidWalls(double buffer) {
+		if(getY()+distanceY >=(getBattleFieldHeight()-50) || getX()+distanceX >= getBattleFieldWidth()-50){
+					turnRight(90);
+					if(direction==180){
+					ahead(distanceX - 10);
+					}
+					else if(direction == 0) {
+					ahead(distanceX-buffer);
+					}
+					else if(direction == 90){
+					ahead(distanceY-buffer);
+					turnGunRight(360);
+					}
+					else {
+					turnRadarRight(360);
+					ahead(distanceY-10);
+					}
+				}
+		else {
+			turnRight(90);	
+			ahead(distanceX);
+		}
+	}
 }
