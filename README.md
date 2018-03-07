@@ -1,4 +1,4 @@
-# robocode
+# BobaBot ReadMe
 Team Bobabot
-Jordyn Sato, Serena Ing
-CS 141.01
+Coded By: Serena Ing and Jordyn Sato
+Class: CS 141.01
